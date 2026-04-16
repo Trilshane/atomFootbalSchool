@@ -25,7 +25,16 @@ SECRET_KEY = 'django-insecure-dwn16y@d*4!846%1e_d-t45ku!(bgvva(ghc=@7+05qok$-h)y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "backend",           # 🔥 Имя сервиса Docker Compose
+    "backend:8000",      # 🔥 С портом — на всякий случай
+    "db",                # Опционально: если есть внутренние запросы
+    ".onrender.com",     # Если деплоите
+    ".vercel.app",
+    os.getenv("DJANGO_ALLOWED_HOST", ""),  # Для гибкости
+]
 
 
 # Application definition
