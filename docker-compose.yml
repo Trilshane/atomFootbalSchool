@@ -1,45 +1,58 @@
 services:
-  db:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: django
-      POSTGRES_PASSWORD: secret123
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-
   backend:
-    image: python:3.12-slim
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: football_backend
     working_dir: /app
     volumes:
       - ./backend:/app
-    command: sh -c "pip install -r requirements.txt && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    depends_on:
-      - db
+      - ./host_media:/app/media:rw
     ports:
       - "8000:8000"
+    env_file: .env
     environment:
-      DB_NAME: mydb
-      DB_USER: django
-      DB_PASSWORD: secret123
-      DB_HOST: db
-      DB_PORT: "5432"
       DJANGO_SETTINGS_MODULE: config.settings
+    command: >
+      sh -c "
+        pip install -r requirements.txt &&
+        python manage.py migrate --noinput &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    restart: unless-stopped
 
   frontend:
-    image: node:20-alpine
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: football_frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
-  
-    command: sh -c "npm install && npm run dev"
+      - /app/node_modules
     ports:
       - "3000:3000"
+    env_file: .env
     environment:
-        NEXT_PUBLIC_API_URL: "http://localhost:8000"
-        API_URL: "http://backend:8000"
-        CHOKIDAR_USEPOLLING: "true"
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
+      API_URL: "http://backend:8000"
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+      NEXT_TURBOPACK_WATCHER_MODE: "poll"
+    command: >
+      sh -c "
+        npm install &&
+        npm run dev
+      "
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    depends_on:
+      - backend
 
-volumes:
-  pg_data:
-  frontend_node_modules:
+  adminer:
+    image: adminer:latest
+    container_name: football_adminer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"

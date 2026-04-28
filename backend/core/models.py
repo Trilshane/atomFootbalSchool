@@ -7,7 +7,12 @@ class Posts(models.Model):
     text = models.TextField("Текст поста")
     created_at = models.DateTimeField("Дата создания", auto_now_add=True)
     categories = models.ManyToManyField("CategoriesPost", blank=True)
-    news_image = models.ImageField("Изображение поста", upload_to='news_images/', null=True, blank=True)
+    news_image = models.ImageField(
+        "Изображение поста",
+        upload_to='news_images/',  # → media/news_images/
+        null=True,
+        blank=True
+    )
     is_published = models.BooleanField("Показывать пост", default=False)
 
     class Meta:

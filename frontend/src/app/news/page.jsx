@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import Image from "next/image";
+import { normalizeMediaUrl } from "../../../lib/image-utils";
 
 export const dynamic = "force-dynamic"; // 🔥 Гарантируем динамический рендеринг
 
@@ -16,7 +18,6 @@ export default async function NewsPage() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        // CSRF не нужен для GET-запросов!
       },
       cache: "no-store",
       next: { revalidate: 0 },
@@ -52,10 +53,18 @@ export default async function NewsPage() {
                   key={post.id}
                   className="bg-white rounded-xl shadow-sm border p-5"
                 >
-                  <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+                  <h2 className="text-xl font-semibold mb-2"> {post.title}</h2>
                   <p className="text-gray-600 text-sm line-clamp-3">
                     {post.text}
                   </p>
+                  <div className="img-container mt-4 w-75 h-48 relative">
+                    <Image
+                      src={normalizeMediaUrl(post.news_image)}
+                      alt={post.title}
+                      className="w-full h-auto rounded-lg"
+                      fill
+                    />
+                  </div>
                 </article>
               ))}
             </div>
@@ -91,3 +100,4 @@ export default async function NewsPage() {
     );
   }
 }
+// HMR_TEST 04/28/2026 16:06:13
