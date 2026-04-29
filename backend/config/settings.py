@@ -53,9 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',    
-    'rest_framework',          # ← DRF для API
-    'corsheaders',             # ← Разрешает запросы с Next.js
-    'core.apps.CoreConfig',                    # ← Наше будущее приложение (создадим на шаге 2)
+    'rest_framework',      
+    'corsheaders',            
+    'news.apps.NewsConfig',
+    'teams.apps.TeamsConfig'                  
 ]
 
 MIDDLEWARE = [
