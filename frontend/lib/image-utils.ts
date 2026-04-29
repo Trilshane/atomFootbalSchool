@@ -1,5 +1,5 @@
 // frontend/lib/image-utils.js
-export function normalizeMediaUrl(url) {
+export function normalizeMediaUrl(url: string) {
   if (!url) return "";
 
   // Если URL уже абсолютный и содержит backend:8000
