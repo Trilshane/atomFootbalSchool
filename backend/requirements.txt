@@ -2,5 +2,6 @@ Django>=5.0,<5.3
 djangorestframework>=3.14,<3.16
 psycopg2-binary
 django-cors-headers
+django-tinymce
 python-decouple
 Pillow

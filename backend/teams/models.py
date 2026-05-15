@@ -1,7 +1,5 @@
 from django.db import models
 
-
-# Create your models here.
 class Year(models.Model):
     year = models.IntegerField("Год команды")
 
